@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Investor Marketing Dashboard</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Marketing Ops · Email Intro A107</p>
+        <h1>Investor Outreach Dashboard</h1>
+        <p class="subtitle">
+          Curated investor pipeline grouped by approval status and investment profile
+          to power the A107 intro workflow.
+        </p>
+      </div>
+      <div class="date-block">
+        <span class="label">Last refreshed</span>
+        <time datetime="2025-09-18">18 Sep 2025</time>
+      </div>
+    </header>
+
+    <section class="kpi-grid" aria-label="Pipeline summary">
+      <article class="kpi-card">
+        <h2>Total Investors</h2>
+        <p id="kpi-total" class="metric">0</p>
+      </article>
+      <article class="kpi-card kpi-approved">
+        <h2>Approved</h2>
+        <p id="kpi-approved" class="metric">0</p>
+      </article>
+      <article class="kpi-card kpi-pending">
+        <h2>Pending</h2>
+        <p id="kpi-pending" class="metric">0</p>
+      </article>
+    </section>
+
+    <section class="chip-panel" aria-label="Filter investors">
+      <h2>Filter by pipeline attributes</h2>
+      <div class="chip-groups">
+        <div class="chip-group" data-filter="status">
+          <h3>Status</h3>
+          <div class="chips" id="status-chips"></div>
+        </div>
+        <div class="chip-group" data-filter="stage">
+          <h3>Stage</h3>
+          <div class="chips" id="stage-chips"></div>
+        </div>
+        <div class="chip-group" data-filter="focus">
+          <h3>Focus</h3>
+          <div class="chips" id="focus-chips"></div>
+        </div>
+      </div>
+      <button type="button" class="reset-button" id="reset-filters">Reset Filters</button>
+    </section>
+
+    <section class="email-group" aria-label="Email intro group A107">
+      <header>
+        <h2>Email Intro Cohort A107</h2>
+        <p>
+          Auto-populated with investors that are marked as <strong>Approved</strong> and ready for
+          the next outreach sequence.
+        </p>
+      </header>
+      <ul id="a107-list" class="pill-list" aria-live="polite"></ul>
+    </section>
+
+    <section class="card-grid" aria-label="Investor directory">
+      <header class="section-header">
+        <h2>Investor Directory</h2>
+        <p class="section-subtitle">
+          Click a chip to filter this directory. Filters stack across status, stage, and focus tags.
+        </p>
+      </header>
+      <div id="investor-cards" class="cards" aria-live="polite"></div>
+      <p id="empty-state" class="empty-state" hidden>
+        No investors match the selected filters. Adjust the dropdown chips to widen your search.
+      </p>
+    </section>
+
+    <template id="investor-card-template">
+      <article class="investor-card">
+        <header>
+          <h3 class="investor-name"></h3>
+          <span class="status-chip" data-status=""></span>
+        </header>
+        <p class="company"></p>
+        <ul class="meta-list"></ul>
+        <div class="tag-list"></div>
+        <footer>
+          <a class="email-link" target="_blank" rel="noreferrer noopener"></a>
+          <a class="linkedin-link" target="_blank" rel="noreferrer noopener">LinkedIn</a>
+        </footer>
+      </article>
+    </template>
+
+    <script src="assets/dashboard.js" type="module"></script>
+  </body>
+</html>
