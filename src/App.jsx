@@ -1,5 +1,20 @@
 import React from "react";
-import { Globe, Shield, BarChart3, Users } from "lucide-react";
+import {
+  Users,
+  PhoneCall,
+  Mail,
+  CalendarClock,
+  ArrowUpRight,
+  ArrowDownRight,
+  Briefcase,
+  Target,
+  DollarSign,
+  CheckCircle2,
+  Clock3,
+  Star,
+  Activity,
+  Building2,
+} from "lucide-react";
 
 // --- START: Mocked Shadcn/ui Components for this example ---
 // These are simplified versions to make the code runnable in one file.
@@ -10,7 +25,7 @@ const Card = ({ children, className }) => (
 );
 
 const CardContent = ({ children, className }) => (
-  <div className={`p-6 pt-0 ${className}`}>{children}</div>
+  <div className={`p-6 ${className}`}>{children}</div>
 );
 
 const Button = ({ children, className, variant, size, onClick }) => {
@@ -21,6 +36,7 @@ const Button = ({ children, className, variant, size, onClick }) => {
     secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
   };
   const sizes = {
+    sm: "h-9 px-4",
     lg: "h-11 px-8 py-2",
   };
   return (
@@ -35,149 +51,537 @@ const Button = ({ children, className, variant, size, onClick }) => {
   );
 };
 
+const Badge = ({ children, variant = "default" }) => {
+  const variants = {
+    default: "bg-gray-100 text-gray-800",
+    success: "bg-green-100 text-green-800",
+    warning: "bg-yellow-100 text-yellow-800",
+    info: "bg-blue-100 text-blue-800",
+  };
+  return (
+    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${variants[variant]}`}>
+      {children}
+    </span>
+  );
+};
 // --- END: Mocked Shadcn/ui Components ---
 
-// SpartaHR website mockup component
-function SpartaHRMockup() {
-  // To simulate the 'motion' component, we'll use a regular div
-  // and apply the classes directly, as framer-motion is not available.
-  const MotionDiv = ({ children, initial, animate, transition, className }) => (
-    <div className={className}>{children}</div>
-  );
+const stats = [
+  {
+    label: "Active Deals",
+    value: "32",
+    delta: "+8 this month",
+    icon: Briefcase,
+    trend: "up",
+  },
+  {
+    label: "Quarter Pipeline",
+    value: "$1.42M",
+    delta: "12% MoM",
+    icon: Target,
+    trend: "up",
+  },
+  {
+    label: "Win Rate",
+    value: "38%",
+    delta: "-3% vs last quarter",
+    icon: Activity,
+    trend: "down",
+  },
+  {
+    label: "Avg. Close Time",
+    value: "24 days",
+    delta: "2 days faster",
+    icon: Clock3,
+    trend: "up",
+  },
+];
 
+const pipelineStages = [
+  {
+    name: "Prospecting",
+    deals: [
+      {
+        company: "Northwind Logistics",
+        owner: "Alex Kim",
+        value: "$28,400",
+        status: "Discovery call booked",
+      },
+      {
+        company: "Zenith Labs",
+        owner: "Priya Patel",
+        value: "$19,900",
+        status: "Awaiting brief",
+      },
+    ],
+  },
+  {
+    name: "Qualified",
+    deals: [
+      {
+        company: "Apex Security",
+        owner: "Jamie Lee",
+        value: "$46,300",
+        status: "Proposal sent",
+      },
+      {
+        company: "Greenstone Solar",
+        owner: "Maria Ruiz",
+        value: "$35,100",
+        status: "Compliance review",
+      },
+    ],
+  },
+  {
+    name: "Negotiation",
+    deals: [
+      {
+        company: "Helix Health",
+        owner: "Alex Kim",
+        value: "$81,750",
+        status: "Legal redlines",
+      },
+      {
+        company: "Brightline Retail",
+        owner: "Priya Patel",
+        value: "$64,200",
+        status: "Discount request",
+      },
+    ],
+  },
+  {
+    name: "Closed Won",
+    deals: [
+      {
+        company: "Cobalt Fintech",
+        owner: "Jamie Lee",
+        value: "$120,000",
+        status: "Live onboarding",
+      },
+      {
+        company: "Vertex Analytics",
+        owner: "Maria Ruiz",
+        value: "$98,500",
+        status: "Kickoff scheduled",
+      },
+    ],
+  },
+];
+
+const contacts = [
+  {
+    name: "Danielle Rivers",
+    title: "VP of Operations",
+    company: "Cobalt Fintech",
+    segment: "Enterprise",
+    score: 92,
+    tags: ["Champion", "Renewal"],
+  },
+  {
+    name: "Malik Thompson",
+    title: "Head of Procurement",
+    company: "Northwind Logistics",
+    segment: "Mid-Market",
+    score: 78,
+    tags: ["Price sensitive"],
+  },
+  {
+    name: "Sofia Martin",
+    title: "IT Director",
+    company: "Zenith Labs",
+    segment: "Mid-Market",
+    score: 84,
+    tags: ["Security review"],
+  },
+  {
+    name: "Kevin Wu",
+    title: "Founder",
+    company: "Brightline Retail",
+    segment: "SMB",
+    score: 74,
+    tags: ["Fast close"],
+  },
+];
+
+const activities = [
+  {
+    type: "Call",
+    subject: "Renewal strategy with Cobalt",
+    owner: "Alex Kim",
+    time: "Today, 2:30pm",
+  },
+  {
+    type: "Email",
+    subject: "Proposal follow-up with Apex",
+    owner: "Priya Patel",
+    time: "Today, 11:00am",
+  },
+  {
+    type: "Demo",
+    subject: "Security review for Zenith",
+    owner: "Jamie Lee",
+    time: "Tomorrow, 9:00am",
+  },
+  {
+    type: "Task",
+    subject: "Send onboarding playbook",
+    owner: "Maria Ruiz",
+    time: "Tomorrow, 3:00pm",
+  },
+];
+
+const tasks = [
+  {
+    label: "Build bespoke ROI calculator for Helix",
+    due: "Due today",
+    status: "On track",
+  },
+  {
+    label: "Finalize MSA redlines with Vertex",
+    due: "Due tomorrow",
+    status: "Blocked",
+  },
+  {
+    label: "Prep QBR deck for Cobalt",
+    due: "Due Friday",
+    status: "On track",
+  },
+];
+
+const revenue = [
+  { month: "Jan", value: 240 },
+  { month: "Feb", value: 310 },
+  { month: "Mar", value: 420 },
+  { month: "Apr", value: 380 },
+  { month: "May", value: 520 },
+  { month: "Jun", value: 610 },
+];
+
+function StatCard({ icon: Icon, label, value, delta, trend }) {
   return (
-    <div className="space-y-12 p-8 bg-gray-50 font-sans antialiased">
-      {/* Hero Section */}
-      <section className="relative text-center py-20 bg-gradient-to-r from-indigo-900 to-purple-800 text-white rounded-2xl shadow-2xl">
-        <MotionDiv
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl font-bold mb-6"
-        >
-          The Future of HR is Intelligent.
-        </MotionDiv>
-        <p className="text-lg mb-8">
-          Powered by People + Data. Shielding small businesses with geolocation & diversity intelligence.
-        </p>
-        <Button size="lg" variant="secondary" className="rounded-full px-8 py-6 text-lg">
-          Explore the Diversity Map →
-        </Button>
-        <div className="absolute inset-0 opacity-20 flex items-center justify-center">
-          <Globe size={300} />
-        </div>
-      </section>
-
-      {/* Interactive Dashboard Preview */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Interactive Diversity Dashboard</h2>
-        <Card className="shadow-xl rounded-2xl overflow-hidden">
-          <CardContent className="p-6 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-gray-100 rounded-xl flex flex-col items-center justify-center">
-                <BarChart3 className="text-indigo-600 mb-4" size={64} />
-                <p className="font-semibold">Workforce Diversity Index</p>
-              </div>
-              <div className="p-4 bg-gray-100 rounded-xl flex flex-col items-center justify-center">
-                <Users className="text-purple-600 mb-4" size={64} />
-                <p className="font-semibold">Talent Pool Hotspots</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 mt-4 text-center">
-              Esri-powered mapping: Visualize diversity metrics, talent pipelines, and equity benchmarks across California.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-      
-      {/* Live Map Mockup Section */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Live Diversity & Compliance Map</h2>
-        <div className="relative w-full h-96 bg-gray-200 rounded-2xl shadow-xl overflow-hidden">
-          {/* Mock background map image - using a placeholder for a California map */}
-          <img 
-            src="https://placehold.co/1200x600/e2e8f0/333333?text=California+Map+Mockup" 
-            alt="Mock California map" 
-            className="w-full h-full object-cover"
-          />
-          {/* Mock data points as "hotspots" */}
-          {/* San Francisco hotspot (Talent Acquisition) */}
-          <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 rounded-full bg-blue-500 bg-opacity-70 animate-pulse">
-            <Users className="text-white" size={32} />
+    <Card className="bg-white">
+      <CardContent className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-gray-500">{label}</p>
+          <div className="flex items-center gap-2 mt-2">
+            <p className="text-2xl font-bold">{value}</p>
+            <span
+              className={`flex items-center gap-1 text-xs font-semibold ${
+                trend === "up" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {trend === "up" ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {delta}
+            </span>
           </div>
-          <div className="absolute top-1/4 left-1/4 text-sm text-white font-bold bg-blue-700 rounded-full px-2 py-1 -mt-10 -ml-4">SF Hotspot</div>
-          
-          {/* Los Angeles hotspot (Compliance Risk) */}
-          <div className="absolute bottom-1/4 right-1/4 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 rounded-full bg-red-500 bg-opacity-70 animate-pulse">
-            <Shield className="text-white" size={32} />
-          </div>
-          <div className="absolute bottom-1/4 right-1/4 text-sm text-white font-bold bg-red-700 rounded-full px-2 py-1 -mb-10 -mr-4">LA Risk Zone</div>
-          
-          {/* San Diego hotspot (Compliance Risk) */}
-          <div className="absolute bottom-1/4 right-1/5 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 rounded-full bg-red-500 bg-opacity-70 animate-pulse">
-            <Shield className="text-white" size={32} />
-          </div>
-          <div className="absolute bottom-1/4 right-1/5 text-sm text-white font-bold bg-red-700 rounded-full px-2 py-1 -mb-10 -mr-4">SD Risk Zone</div>
         </div>
-        <p className="text-sm text-gray-600 mt-4 text-center">
-          Real-time insights: View talent acquisition hotspots and compliance risk zones across California.
-        </p>
-      </section>
-
-      {/* Membership Portal Preview */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Client Membership Portal</h2>
-        <Card className="shadow-xl rounded-2xl overflow-hidden">
-          <CardContent className="p-6 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div className="p-4 bg-gray-100 rounded-xl">
-                <Shield className="text-green-600 mb-4" size={48} />
-                <p className="font-semibold">Compliance Dashboard</p>
-              </div>
-              <div className="p-4 bg-gray-100 rounded-xl">
-                <BarChart3 className="text-blue-600 mb-4" size={48} />
-                <p className="font-semibold">Quarterly Reports</p>
-              </div>
-              <div className="p-4 bg-gray-100 rounded-xl">
-                <Users className="text-purple-600 mb-4" size={48} />
-                <p className="font-semibold">Training Hub</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 mt-4 text-center">
-              Secure access for members: HR dashboards, equity benchmarks, leadership training, and advisory sessions.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Services with Data Layers */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Data-Driven Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="shadow-md rounded-2xl overflow-hidden">
-            <CardContent className="p-6 bg-white">
-              <h3 className="font-semibold text-xl mb-2">HR Compliance</h3>
-              <p className="text-sm text-gray-600">
-                California map overlay with lawsuit activity zones to predict compliance risks.
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="shadow-md rounded-2xl overflow-hidden">
-            <CardContent className="p-6 bg-white">
-              <h3 className="font-semibold text-xl mb-2">Talent Acquisition</h3>
-              <p className="text-sm text-gray-600">
-                Heatmap showing candidate availability and cultural fit across Bay Area hotspots.
-              </p>
-            </CardContent>
-          </Card>
+        <div className="p-3 rounded-full bg-indigo-50 text-indigo-700">
+          <Icon size={24} />
         </div>
-      </section>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DealCard({ deal }) {
+  return (
+    <div className="p-4 bg-white rounded-lg border shadow-sm space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="font-semibold text-gray-900">{deal.company}</p>
+        <Badge variant="info">{deal.value}</Badge>
+      </div>
+      <p className="text-sm text-gray-600">Owner: {deal.owner}</p>
+      <div className="flex items-center gap-2 text-sm text-gray-500">
+        <Activity size={16} />
+        <span>{deal.status}</span>
+      </div>
     </div>
   );
 }
 
-// Main App component to render the mockup
-export default function App() {
-  return <SpartaHRMockup />;
+function ContactRow({ contact }) {
+  return (
+    <div className="flex items-center justify-between py-3 border-b last:border-0">
+      <div>
+        <p className="font-semibold text-gray-900">{contact.name}</p>
+        <p className="text-sm text-gray-600">
+          {contact.title} · {contact.company}
+        </p>
+        <div className="flex gap-2 mt-1">
+          {contact.tags.map((tag) => (
+            <Badge key={tag} variant="info">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <Badge variant="success">Score {contact.score}</Badge>
+        <Badge variant="default">{contact.segment}</Badge>
+      </div>
+    </div>
+  );
 }
 
+function ActivityItem({ activity }) {
+  const iconMap = {
+    Call: PhoneCall,
+    Email: Mail,
+    Demo: CalendarClock,
+    Task: CheckCircle2,
+  };
+
+  const Icon = iconMap[activity.type] || Activity;
+
+  return (
+    <div className="flex items-center justify-between py-3 border-b last:border-0">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-full bg-indigo-50 text-indigo-700">
+          <Icon size={18} />
+        </div>
+        <div>
+          <p className="font-semibold text-gray-900">{activity.subject}</p>
+          <p className="text-sm text-gray-600">{activity.owner}</p>
+        </div>
+      </div>
+      <p className="text-sm text-gray-500">{activity.time}</p>
+    </div>
+  );
+}
+
+function TaskItem({ task }) {
+  const variant = task.status === "Blocked" ? "warning" : "success";
+  return (
+    <div className="flex items-center justify-between py-3 border-b last:border-0">
+      <div>
+        <p className="font-semibold text-gray-900">{task.label}</p>
+        <p className="text-sm text-gray-600">{task.due}</p>
+      </div>
+      <Badge variant={variant}>{task.status}</Badge>
+    </div>
+  );
+}
+
+function RevenueSparkline() {
+  return (
+    <div className="mt-4 grid grid-cols-6 gap-3">
+      {revenue.map((point) => (
+        <div key={point.month} className="text-center">
+          <div className="h-24 bg-indigo-50 rounded-lg flex items-end justify-center">
+            <div
+              className="w-8 bg-indigo-600 rounded-md"
+              style={{ height: `${point.value / 8}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-gray-600">{point.month}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased">
+      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-800 text-white pb-12">
+        <div className="max-w-6xl mx-auto px-6 pt-12 flex items-center justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-indigo-200">Growth CRM</p>
+            <h1 className="text-4xl md:text-5xl font-bold mt-2">Atlas CRM Command Center</h1>
+            <p className="mt-3 text-indigo-100 max-w-2xl">
+              Centralize your revenue team workflows: pipeline health, high-intent contacts, and deal velocity insights in one place.
+            </p>
+            <div className="flex gap-3 mt-6">
+              <Button size="lg" className="bg-white text-indigo-800 hover:bg-indigo-50">
+                Create deal
+              </Button>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-indigo-700 text-white hover:bg-indigo-600"
+              >
+                Schedule sync
+              </Button>
+            </div>
+          </div>
+          <div className="hidden md:flex flex-col gap-2 text-sm text-indigo-100">
+            <div className="flex items-center gap-2">
+              <Users size={18} />
+              <span>Team: Enterprise Sales</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Building2 size={18} />
+              <span>ARR coverage: 3.2x</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star size={18} />
+              <span>CSAT: 4.8/5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 -mt-10 space-y-8 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {stats.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2 bg-white">
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase text-gray-500">Pipeline</p>
+                  <h2 className="text-xl font-bold">Deal stages</h2>
+                </div>
+                <Badge variant="info">Realtime</Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {pipelineStages.map((stage) => (
+                  <div key={stage.name} className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="font-semibold text-gray-800">{stage.name}</p>
+                      <Badge variant="default">{stage.deals.length}</Badge>
+                    </div>
+                    <div className="space-y-3">
+                      {stage.deals.map((deal) => (
+                        <DealCard key={deal.company} deal={deal} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase text-gray-500">Signal Feed</p>
+                  <h2 className="text-xl font-bold">Latest activities</h2>
+                </div>
+                <Button size="sm" className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
+                  View log
+                </Button>
+              </div>
+              <div className="space-y-1">
+                {activities.map((activity) => (
+                  <ActivityItem key={activity.subject} activity={activity} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="bg-white lg:col-span-2">
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase text-gray-500">Book of Business</p>
+                  <h2 className="text-xl font-bold">Priority contacts</h2>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
+                    Add contact
+                  </Button>
+                  <Button size="sm" variant="secondary" className="bg-white text-gray-700 border">
+                    Import CSV
+                  </Button>
+                </div>
+              </div>
+              <div className="divide-y">
+                {contacts.map((contact) => (
+                  <ContactRow key={contact.name} contact={contact} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase text-gray-500">Tasks</p>
+                  <h2 className="text-xl font-bold">RevOps queue</h2>
+                </div>
+                <Badge variant="success">SLA: 4h</Badge>
+              </div>
+              <div className="divide-y">
+                {tasks.map((task) => (
+                  <TaskItem key={task.label} task={task} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="bg-white lg:col-span-2">
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase text-gray-500">Forecast</p>
+                  <h2 className="text-xl font-bold">ARR trend</h2>
+                </div>
+                <Badge variant="info">Next 6 months</Badge>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="flex-1">
+                  <RevenueSparkline />
+                </div>
+                <div className="space-y-2 text-sm text-gray-700">
+                  <div className="flex items-center gap-2">
+                    <ArrowUpRight size={16} className="text-green-600" />
+                    <span>Expansion deals outpacing churn by 4.2x</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock3 size={16} className="text-indigo-600" />
+                    <span>Average cycle reduced to 24 days</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Target size={16} className="text-purple-600" />
+                    <span>Northwind and Zenith flagged as high-intent</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase text-gray-500">Customer story</p>
+                  <h2 className="text-xl font-bold">Cobalt Fintech</h2>
+                </div>
+                <Badge variant="success">Renewal</Badge>
+              </div>
+              <div className="space-y-3 text-sm text-gray-700">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-green-600" />
+                  <span>Onboarding phase complete</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail size={16} className="text-indigo-600" />
+                  <span>Weekly health summary shared</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CalendarClock size={16} className="text-purple-600" />
+                  <span>QBR scheduled for July 12</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <DollarSign size={16} className="text-amber-600" />
+                  <span>Expansion: $220k multi-year add-on in review</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
