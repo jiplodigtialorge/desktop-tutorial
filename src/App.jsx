@@ -15,56 +15,7 @@ import {
   Activity,
   Building2,
 } from "lucide-react";
-
-// --- START: Mocked Shadcn/ui Components for this example ---
-// These are simplified versions to make the code runnable in one file.
-const Card = ({ children, className }) => (
-  <div className={`rounded-xl border bg-card text-card-foreground shadow-sm ${className}`}>
-    {children}
-  </div>
-);
-
-const CardContent = ({ children, className }) => (
-  <div className={`p-6 ${className}`}>{children}</div>
-);
-
-const Button = ({ children, className, variant, size, onClick }) => {
-  const baseStyle =
-    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
-  const variants = {
-    default: "bg-primary text-primary-foreground hover:bg-primary/90",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-  };
-  const sizes = {
-    sm: "h-9 px-4",
-    lg: "h-11 px-8 py-2",
-  };
-  return (
-    <button
-      className={`${baseStyle} ${variants[variant] || variants.default} ${
-        sizes[size] || ""
-      } ${className}`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
-
-const Badge = ({ children, variant = "default" }) => {
-  const variants = {
-    default: "bg-gray-100 text-gray-800",
-    success: "bg-green-100 text-green-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    info: "bg-blue-100 text-blue-800",
-  };
-  return (
-    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${variants[variant]}`}>
-      {children}
-    </span>
-  );
-};
-// --- END: Mocked Shadcn/ui Components ---
+import "../assets/crm.css";
 
 const stats = [
   {
@@ -257,41 +208,55 @@ const revenue = [
   { month: "Jun", value: 610 },
 ];
 
+const Button = ({ children, variant = "primary", size = "md" }) => (
+  <button className={`btn ${variant === "ghost" ? "btn--ghost" : variant === "subtle" ? "btn--subtle" : "btn--primary"}`}>
+    {children}
+  </button>
+);
+
+const Badge = ({ children, tone = "indigo" }) => (
+  <span
+    className={`badge ${
+      tone === "success" ? "badge--success" : tone === "warning" ? "badge--warning" : tone === "muted" ? "badge--muted" : ""
+    }`}
+  >
+    {children}
+  </span>
+);
+
 function StatCard({ icon: Icon, label, value, delta, trend }) {
+  const deltaClass = trend === "up" ? "stat-card__delta stat-card__delta--up" : "stat-card__delta stat-card__delta--down";
+
   return (
-    <Card className="bg-white">
-      <CardContent className="flex items-center justify-between">
+    <div className="card card--subtle">
+      <div className="card__content" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <p className="text-2xl font-bold">{value}</p>
-            <span
-              className={`flex items-center gap-1 text-xs font-semibold ${
-                trend === "up" ? "text-green-600" : "text-red-600"
-              }`}
-            >
+          <p className="stat-card__title">{label}</p>
+          <div className="stat-card__value">
+            <span>{value}</span>
+            <span className={deltaClass}>
               {trend === "up" ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
               {delta}
             </span>
           </div>
         </div>
-        <div className="p-3 rounded-full bg-indigo-50 text-indigo-700">
+        <span className="icon-pill">
           <Icon size={24} />
-        </div>
-      </CardContent>
-    </Card>
+        </span>
+      </div>
+    </div>
   );
 }
 
 function DealCard({ deal }) {
   return (
-    <div className="p-4 bg-white rounded-lg border shadow-sm space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="font-semibold text-gray-900">{deal.company}</p>
-        <Badge variant="info">{deal.value}</Badge>
+    <div className="deal-card">
+      <div className="deal-card__top">
+        <h4 className="deal-card__title">{deal.company}</h4>
+        <Badge>{deal.value}</Badge>
       </div>
-      <p className="text-sm text-gray-600">Owner: {deal.owner}</p>
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <p className="deal-card__owner">Owner: {deal.owner}</p>
+      <div className="deal-card__status">
         <Activity size={16} />
         <span>{deal.status}</span>
       </div>
@@ -301,23 +266,21 @@ function DealCard({ deal }) {
 
 function ContactRow({ contact }) {
   return (
-    <div className="flex items-center justify-between py-3 border-b last:border-0">
+    <div className="contact-row">
       <div>
-        <p className="font-semibold text-gray-900">{contact.name}</p>
-        <p className="text-sm text-gray-600">
+        <p className="deal-card__title" style={{ margin: 0 }}>{contact.name}</p>
+        <p className="contact-meta">
           {contact.title} · {contact.company}
         </p>
-        <div className="flex gap-2 mt-1">
+        <div className="tag-row">
           {contact.tags.map((tag) => (
-            <Badge key={tag} variant="info">
-              {tag}
-            </Badge>
+            <Badge key={tag}>{tag}</Badge>
           ))}
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <Badge variant="success">Score {contact.score}</Badge>
-        <Badge variant="default">{contact.segment}</Badge>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+        <Badge tone="success">Score {contact.score}</Badge>
+        <Badge tone="muted">{contact.segment}</Badge>
       </div>
     </div>
   );
@@ -334,46 +297,43 @@ function ActivityItem({ activity }) {
   const Icon = iconMap[activity.type] || Activity;
 
   return (
-    <div className="flex items-center justify-between py-3 border-b last:border-0">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-full bg-indigo-50 text-indigo-700">
+    <div className="activity-row">
+      <div className="activity-row__left">
+        <span className="activity-icon">
           <Icon size={18} />
-        </div>
+        </span>
         <div>
-          <p className="font-semibold text-gray-900">{activity.subject}</p>
-          <p className="text-sm text-gray-600">{activity.owner}</p>
+          <p className="deal-card__title" style={{ margin: 0 }}>{activity.subject}</p>
+          <p className="contact-meta" style={{ marginBottom: 0 }}>{activity.owner}</p>
         </div>
       </div>
-      <p className="text-sm text-gray-500">{activity.time}</p>
+      <p className="contact-meta" style={{ margin: 0 }}>{activity.time}</p>
     </div>
   );
 }
 
 function TaskItem({ task }) {
-  const variant = task.status === "Blocked" ? "warning" : "success";
+  const tone = task.status === "Blocked" ? "warning" : "success";
   return (
-    <div className="flex items-center justify-between py-3 border-b last:border-0">
+    <div className="task-row">
       <div>
-        <p className="font-semibold text-gray-900">{task.label}</p>
-        <p className="text-sm text-gray-600">{task.due}</p>
+        <p className="deal-card__title" style={{ margin: 0 }}>{task.label}</p>
+        <p className="contact-meta" style={{ margin: 0 }}>{task.due}</p>
       </div>
-      <Badge variant={variant}>{task.status}</Badge>
+      <Badge tone={tone}>{task.status}</Badge>
     </div>
   );
 }
 
 function RevenueSparkline() {
   return (
-    <div className="mt-4 grid grid-cols-6 gap-3">
+    <div className="sparkline">
       {revenue.map((point) => (
-        <div key={point.month} className="text-center">
-          <div className="h-24 bg-indigo-50 rounded-lg flex items-end justify-center">
-            <div
-              className="w-8 bg-indigo-600 rounded-md"
-              style={{ height: `${point.value / 8}%` }}
-            />
+        <div key={point.month}>
+          <div className="sparkline__bar-wrap">
+            <div className="sparkline__bar" style={{ height: `${point.value / 7}%` }} />
           </div>
-          <p className="mt-2 text-xs text-gray-600">{point.month}</p>
+          <p className="sparkline__label">{point.month}</p>
         </div>
       ))}
     </div>
@@ -382,38 +342,30 @@ function RevenueSparkline() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased">
-      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-800 text-white pb-12">
-        <div className="max-w-6xl mx-auto px-6 pt-12 flex items-center justify-between">
+    <div className="app-shell">
+      <div className="hero">
+        <div className="hero__grid">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-indigo-200">Growth CRM</p>
-            <h1 className="text-4xl md:text-5xl font-bold mt-2">Atlas CRM Command Center</h1>
-            <p className="mt-3 text-indigo-100 max-w-2xl">
+            <p className="hero__eyebrow">Growth CRM</p>
+            <h1 className="hero__title">Atlas CRM Command Center</h1>
+            <p className="hero__subtitle">
               Centralize your revenue team workflows: pipeline health, high-intent contacts, and deal velocity insights in one place.
             </p>
-            <div className="flex gap-3 mt-6">
-              <Button size="lg" className="bg-white text-indigo-800 hover:bg-indigo-50">
-                Create deal
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="bg-indigo-700 text-white hover:bg-indigo-600"
-              >
-                Schedule sync
-              </Button>
+            <div className="hero__actions">
+              <Button>Create deal</Button>
+              <Button variant="ghost">Schedule sync</Button>
             </div>
           </div>
-          <div className="hidden md:flex flex-col gap-2 text-sm text-indigo-100">
-            <div className="flex items-center gap-2">
+          <div className="hero__meta">
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Users size={18} />
               <span>Team: Enterprise Sales</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Building2 size={18} />
               <span>ARR coverage: 3.2x</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Star size={18} />
               <span>CSAT: 4.8/5</span>
             </div>
@@ -421,167 +373,171 @@ export default function App() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 -mt-10 space-y-8 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <main className="main">
+        <div className="stats-grid">
           {stats.map((stat) => (
             <StatCard key={stat.label} {...stat} />
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 bg-white">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
+        <div className="section-grid">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
                 <div>
-                  <p className="text-xs uppercase text-gray-500">Pipeline</p>
-                  <h2 className="text-xl font-bold">Deal stages</h2>
+                  <p className="section-meta">Pipeline</p>
+                  <h2 className="section-title">Deal stages</h2>
                 </div>
-                <Badge variant="info">Realtime</Badge>
+                <Badge>Realtime</Badge>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="pipeline-grid">
                 {pipelineStages.map((stage) => (
-                  <div key={stage.name} className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <p className="font-semibold text-gray-800">{stage.name}</p>
-                      <Badge variant="default">{stage.deals.length}</Badge>
+                  <div key={stage.name} className="pipeline-column">
+                    <div className="pipeline-column__head">
+                      <p className="deal-card__title" style={{ margin: 0 }}>{stage.name}</p>
+                      <Badge tone="muted">{stage.deals.length}</Badge>
                     </div>
-                    <div className="space-y-3">
-                      {stage.deals.map((deal) => (
-                        <DealCard key={deal.company} deal={deal} />
-                      ))}
-                    </div>
+                    {stage.deals.map((deal) => (
+                      <DealCard key={deal.company} deal={deal} />
+                    ))}
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
                 <div>
-                  <p className="text-xs uppercase text-gray-500">Signal Feed</p>
-                  <h2 className="text-xl font-bold">Latest activities</h2>
+                  <p className="section-meta">Signal Feed</p>
+                  <h2 className="section-title">Latest activities</h2>
                 </div>
-                <Button size="sm" className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
-                  View log
-                </Button>
+                <Button variant="subtle">View log</Button>
               </div>
-              <div className="space-y-1">
+              <div className="list-divider">
                 {activities.map((activity) => (
                   <ActivityItem key={activity.subject} activity={activity} />
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-white lg:col-span-2">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
+        <div className="section-grid">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
                 <div>
-                  <p className="text-xs uppercase text-gray-500">Book of Business</p>
-                  <h2 className="text-xl font-bold">Priority contacts</h2>
+                  <p className="section-meta">Book of Business</p>
+                  <h2 className="section-title">Priority contacts</h2>
                 </div>
-                <div className="flex gap-2">
-                  <Button size="sm" className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
-                    Add contact
-                  </Button>
-                  <Button size="sm" variant="secondary" className="bg-white text-gray-700 border">
-                    Import CSV
-                  </Button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Button variant="subtle">Add contact</Button>
+                  <Button variant="ghost">Import CSV</Button>
                 </div>
               </div>
-              <div className="divide-y">
+              <div className="list-divider">
                 {contacts.map((contact) => (
                   <ContactRow key={contact.name} contact={contact} />
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
                 <div>
-                  <p className="text-xs uppercase text-gray-500">Tasks</p>
-                  <h2 className="text-xl font-bold">RevOps queue</h2>
+                  <p className="section-meta">Tasks</p>
+                  <h2 className="section-title">RevOps queue</h2>
                 </div>
-                <Badge variant="success">SLA: 4h</Badge>
+                <Badge tone="success">SLA: 4h</Badge>
               </div>
-              <div className="divide-y">
+              <div className="list-divider">
                 {tasks.map((task) => (
                   <TaskItem key={task.label} task={task} />
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-white lg:col-span-2">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
+        <div className="section-grid">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
                 <div>
-                  <p className="text-xs uppercase text-gray-500">Forecast</p>
-                  <h2 className="text-xl font-bold">ARR trend</h2>
+                  <p className="section-meta">Forecast</p>
+                  <h2 className="section-title">ARR trend</h2>
                 </div>
-                <Badge variant="info">Next 6 months</Badge>
+                <Badge>Next 6 months</Badge>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="flex-1">
-                  <RevenueSparkline />
-                </div>
-                <div className="space-y-2 text-sm text-gray-700">
-                  <div className="flex items-center gap-2">
-                    <ArrowUpRight size={16} className="text-green-600" />
+              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: "20px" }}>
+                <RevenueSparkline />
+                <div style={{ display: "grid", gap: "10px", alignContent: "start" }}>
+                  <div className="story-item">
+                    <span className="story-item__icon green">
+                      <ArrowUpRight size={16} />
+                    </span>
                     <span>Expansion deals outpacing churn by 4.2x</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock3 size={16} className="text-indigo-600" />
+                  <div className="story-item">
+                    <span className="story-item__icon indigo">
+                      <Clock3 size={16} />
+                    </span>
                     <span>Average cycle reduced to 24 days</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Target size={16} className="text-purple-600" />
+                  <div className="story-item">
+                    <span className="story-item__icon purple">
+                      <Target size={16} />
+                    </span>
                     <span>Northwind and Zenith flagged as high-intent</span>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
                 <div>
-                  <p className="text-xs uppercase text-gray-500">Customer story</p>
-                  <h2 className="text-xl font-bold">Cobalt Fintech</h2>
+                  <p className="section-meta">Customer story</p>
+                  <h2 className="section-title">Cobalt Fintech</h2>
                 </div>
-                <Badge variant="success">Renewal</Badge>
+                <Badge tone="success">Renewal</Badge>
               </div>
-              <div className="space-y-3 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} className="text-green-600" />
+              <div className="story-grid">
+                <div className="story-item">
+                  <span className="story-item__icon green">
+                    <CheckCircle2 size={16} />
+                  </span>
                   <span>Onboarding phase complete</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Mail size={16} className="text-indigo-600" />
+                <div className="story-item">
+                  <span className="story-item__icon indigo">
+                    <Mail size={16} />
+                  </span>
                   <span>Weekly health summary shared</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CalendarClock size={16} className="text-purple-600" />
+                <div className="story-item">
+                  <span className="story-item__icon purple">
+                    <CalendarClock size={16} />
+                  </span>
                   <span>QBR scheduled for July 12</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <DollarSign size={16} className="text-amber-600" />
+                <div className="story-item">
+                  <span className="story-item__icon amber">
+                    <DollarSign size={16} />
+                  </span>
                   <span>Expansion: $220k multi-year add-on in review</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
