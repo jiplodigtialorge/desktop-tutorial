@@ -34,16 +34,15 @@ async function loadData() {
 }
 
 function initializeDashboard() {
-  renderKpis(state.investors);
   renderChips();
-  renderInvestors(state.investors);
+  updateInvestorsView(state.investors);
   renderA107(state.investors.filter((investor) => investor.status === "Approved"));
   selectors.resetButton.addEventListener("click", () => {
     state.filters.status.clear();
     state.filters.stage.clear();
     state.filters.focus.clear();
     document.querySelectorAll(".chip.is-active").forEach((chip) => chip.classList.remove("is-active"));
-    renderInvestors(state.investors);
+    updateInvestorsView(state.investors);
   });
 }
 
@@ -89,7 +88,7 @@ function toggleChip(button, type, value) {
     button.classList.add("is-active");
   }
   const filtered = applyFilters();
-  renderInvestors(filtered);
+  updateInvestorsView(filtered);
 }
 
 function applyFilters() {
@@ -149,6 +148,11 @@ function createMetaItem(label, value) {
   const li = document.createElement("li");
   li.innerHTML = `<strong>${label}:</strong> ${value}`;
   return li;
+}
+
+function updateInvestorsView(investors) {
+  renderKpis(investors);
+  renderInvestors(investors);
 }
 
 function renderA107(approvedInvestors) {
