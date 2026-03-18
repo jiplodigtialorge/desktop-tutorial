@@ -1,183 +1,543 @@
 import React from "react";
-import { Globe, Shield, BarChart3, Users } from "lucide-react";
+import {
+  Users,
+  PhoneCall,
+  Mail,
+  CalendarClock,
+  ArrowUpRight,
+  ArrowDownRight,
+  Briefcase,
+  Target,
+  DollarSign,
+  CheckCircle2,
+  Clock3,
+  Star,
+  Activity,
+  Building2,
+} from "lucide-react";
+import "../assets/crm.css";
 
-// --- START: Mocked Shadcn/ui Components for this example ---
-// These are simplified versions to make the code runnable in one file.
-const Card = ({ children, className }) => (
-  <div className={`rounded-xl border bg-card text-card-foreground shadow-sm ${className}`}>
+const stats = [
+  {
+    label: "Active Deals",
+    value: "32",
+    delta: "+8 this month",
+    icon: Briefcase,
+    trend: "up",
+  },
+  {
+    label: "Quarter Pipeline",
+    value: "$1.42M",
+    delta: "12% MoM",
+    icon: Target,
+    trend: "up",
+  },
+  {
+    label: "Win Rate",
+    value: "38%",
+    delta: "-3% vs last quarter",
+    icon: Activity,
+    trend: "down",
+  },
+  {
+    label: "Avg. Close Time",
+    value: "24 days",
+    delta: "2 days faster",
+    icon: Clock3,
+    trend: "up",
+  },
+];
+
+const pipelineStages = [
+  {
+    name: "Prospecting",
+    deals: [
+      {
+        company: "Northwind Logistics",
+        owner: "Alex Kim",
+        value: "$28,400",
+        status: "Discovery call booked",
+      },
+      {
+        company: "Zenith Labs",
+        owner: "Priya Patel",
+        value: "$19,900",
+        status: "Awaiting brief",
+      },
+    ],
+  },
+  {
+    name: "Qualified",
+    deals: [
+      {
+        company: "Apex Security",
+        owner: "Jamie Lee",
+        value: "$46,300",
+        status: "Proposal sent",
+      },
+      {
+        company: "Greenstone Solar",
+        owner: "Maria Ruiz",
+        value: "$35,100",
+        status: "Compliance review",
+      },
+    ],
+  },
+  {
+    name: "Negotiation",
+    deals: [
+      {
+        company: "Helix Health",
+        owner: "Alex Kim",
+        value: "$81,750",
+        status: "Legal redlines",
+      },
+      {
+        company: "Brightline Retail",
+        owner: "Priya Patel",
+        value: "$64,200",
+        status: "Discount request",
+      },
+    ],
+  },
+  {
+    name: "Closed Won",
+    deals: [
+      {
+        company: "Cobalt Fintech",
+        owner: "Jamie Lee",
+        value: "$120,000",
+        status: "Live onboarding",
+      },
+      {
+        company: "Vertex Analytics",
+        owner: "Maria Ruiz",
+        value: "$98,500",
+        status: "Kickoff scheduled",
+      },
+    ],
+  },
+];
+
+const contacts = [
+  {
+    name: "Danielle Rivers",
+    title: "VP of Operations",
+    company: "Cobalt Fintech",
+    segment: "Enterprise",
+    score: 92,
+    tags: ["Champion", "Renewal"],
+  },
+  {
+    name: "Malik Thompson",
+    title: "Head of Procurement",
+    company: "Northwind Logistics",
+    segment: "Mid-Market",
+    score: 78,
+    tags: ["Price sensitive"],
+  },
+  {
+    name: "Sofia Martin",
+    title: "IT Director",
+    company: "Zenith Labs",
+    segment: "Mid-Market",
+    score: 84,
+    tags: ["Security review"],
+  },
+  {
+    name: "Kevin Wu",
+    title: "Founder",
+    company: "Brightline Retail",
+    segment: "SMB",
+    score: 74,
+    tags: ["Fast close"],
+  },
+];
+
+const activities = [
+  {
+    type: "Call",
+    subject: "Renewal strategy with Cobalt",
+    owner: "Alex Kim",
+    time: "Today, 2:30pm",
+  },
+  {
+    type: "Email",
+    subject: "Proposal follow-up with Apex",
+    owner: "Priya Patel",
+    time: "Today, 11:00am",
+  },
+  {
+    type: "Demo",
+    subject: "Security review for Zenith",
+    owner: "Jamie Lee",
+    time: "Tomorrow, 9:00am",
+  },
+  {
+    type: "Task",
+    subject: "Send onboarding playbook",
+    owner: "Maria Ruiz",
+    time: "Tomorrow, 3:00pm",
+  },
+];
+
+const tasks = [
+  {
+    label: "Build bespoke ROI calculator for Helix",
+    due: "Due today",
+    status: "On track",
+  },
+  {
+    label: "Finalize MSA redlines with Vertex",
+    due: "Due tomorrow",
+    status: "Blocked",
+  },
+  {
+    label: "Prep QBR deck for Cobalt",
+    due: "Due Friday",
+    status: "On track",
+  },
+];
+
+const revenue = [
+  { month: "Jan", value: 240 },
+  { month: "Feb", value: 310 },
+  { month: "Mar", value: 420 },
+  { month: "Apr", value: 380 },
+  { month: "May", value: 520 },
+  { month: "Jun", value: 610 },
+];
+
+const Button = ({ children, variant = "primary", size = "md" }) => (
+  <button className={`btn ${variant === "ghost" ? "btn--ghost" : variant === "subtle" ? "btn--subtle" : "btn--primary"}`}>
     {children}
-  </div>
+  </button>
 );
 
-const CardContent = ({ children, className }) => (
-  <div className={`p-6 pt-0 ${className}`}>{children}</div>
+const Badge = ({ children, tone = "indigo" }) => (
+  <span
+    className={`badge ${
+      tone === "success" ? "badge--success" : tone === "warning" ? "badge--warning" : tone === "muted" ? "badge--muted" : ""
+    }`}
+  >
+    {children}
+  </span>
 );
 
-const Button = ({ children, className, variant, size, onClick }) => {
-  const baseStyle =
-    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
-  const variants = {
-    default: "bg-primary text-primary-foreground hover:bg-primary/90",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-  };
-  const sizes = {
-    lg: "h-11 px-8 py-2",
-  };
-  return (
-    <button
-      className={`${baseStyle} ${variants[variant] || variants.default} ${
-        sizes[size] || ""
-      } ${className}`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
-
-// --- END: Mocked Shadcn/ui Components ---
-
-// SpartaHR website mockup component
-function SpartaHRMockup() {
-  // To simulate the 'motion' component, we'll use a regular div
-  // and apply the classes directly, as framer-motion is not available.
-  const MotionDiv = ({ children, initial, animate, transition, className }) => (
-    <div className={className}>{children}</div>
-  );
+function StatCard({ icon: Icon, label, value, delta, trend }) {
+  const deltaClass = trend === "up" ? "stat-card__delta stat-card__delta--up" : "stat-card__delta stat-card__delta--down";
 
   return (
-    <div className="space-y-12 p-8 bg-gray-50 font-sans antialiased">
-      {/* Hero Section */}
-      <section className="relative text-center py-20 bg-gradient-to-r from-indigo-900 to-purple-800 text-white rounded-2xl shadow-2xl">
-        <MotionDiv
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl font-bold mb-6"
-        >
-          The Future of HR is Intelligent.
-        </MotionDiv>
-        <p className="text-lg mb-8">
-          Powered by People + Data. Shielding small businesses with geolocation & diversity intelligence.
-        </p>
-        <Button size="lg" variant="secondary" className="rounded-full px-8 py-6 text-lg">
-          Explore the Diversity Map →
-        </Button>
-        <div className="absolute inset-0 opacity-20 flex items-center justify-center">
-          <Globe size={300} />
-        </div>
-      </section>
-
-      {/* Interactive Dashboard Preview */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Interactive Diversity Dashboard</h2>
-        <Card className="shadow-xl rounded-2xl overflow-hidden">
-          <CardContent className="p-6 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-gray-100 rounded-xl flex flex-col items-center justify-center">
-                <BarChart3 className="text-indigo-600 mb-4" size={64} />
-                <p className="font-semibold">Workforce Diversity Index</p>
-              </div>
-              <div className="p-4 bg-gray-100 rounded-xl flex flex-col items-center justify-center">
-                <Users className="text-purple-600 mb-4" size={64} />
-                <p className="font-semibold">Talent Pool Hotspots</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 mt-4 text-center">
-              Esri-powered mapping: Visualize diversity metrics, talent pipelines, and equity benchmarks across California.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-      
-      {/* Live Map Mockup Section */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Live Diversity & Compliance Map</h2>
-        <div className="relative w-full h-96 bg-gray-200 rounded-2xl shadow-xl overflow-hidden">
-          {/* Mock background map image - using a placeholder for a California map */}
-          <img 
-            src="https://placehold.co/1200x600/e2e8f0/333333?text=California+Map+Mockup" 
-            alt="Mock California map" 
-            className="w-full h-full object-cover"
-          />
-          {/* Mock data points as "hotspots" */}
-          {/* San Francisco hotspot (Talent Acquisition) */}
-          <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 rounded-full bg-blue-500 bg-opacity-70 animate-pulse">
-            <Users className="text-white" size={32} />
+    <div className="card card--subtle">
+      <div className="card__content" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <p className="stat-card__title">{label}</p>
+          <div className="stat-card__value">
+            <span>{value}</span>
+            <span className={deltaClass}>
+              {trend === "up" ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {delta}
+            </span>
           </div>
-          <div className="absolute top-1/4 left-1/4 text-sm text-white font-bold bg-blue-700 rounded-full px-2 py-1 -mt-10 -ml-4">SF Hotspot</div>
-          
-          {/* Los Angeles hotspot (Compliance Risk) */}
-          <div className="absolute bottom-1/4 right-1/4 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 rounded-full bg-red-500 bg-opacity-70 animate-pulse">
-            <Shield className="text-white" size={32} />
-          </div>
-          <div className="absolute bottom-1/4 right-1/4 text-sm text-white font-bold bg-red-700 rounded-full px-2 py-1 -mb-10 -mr-4">LA Risk Zone</div>
-          
-          {/* San Diego hotspot (Compliance Risk) */}
-          <div className="absolute bottom-1/4 right-1/5 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 rounded-full bg-red-500 bg-opacity-70 animate-pulse">
-            <Shield className="text-white" size={32} />
-          </div>
-          <div className="absolute bottom-1/4 right-1/5 text-sm text-white font-bold bg-red-700 rounded-full px-2 py-1 -mb-10 -mr-4">SD Risk Zone</div>
         </div>
-        <p className="text-sm text-gray-600 mt-4 text-center">
-          Real-time insights: View talent acquisition hotspots and compliance risk zones across California.
-        </p>
-      </section>
-
-      {/* Membership Portal Preview */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Client Membership Portal</h2>
-        <Card className="shadow-xl rounded-2xl overflow-hidden">
-          <CardContent className="p-6 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div className="p-4 bg-gray-100 rounded-xl">
-                <Shield className="text-green-600 mb-4" size={48} />
-                <p className="font-semibold">Compliance Dashboard</p>
-              </div>
-              <div className="p-4 bg-gray-100 rounded-xl">
-                <BarChart3 className="text-blue-600 mb-4" size={48} />
-                <p className="font-semibold">Quarterly Reports</p>
-              </div>
-              <div className="p-4 bg-gray-100 rounded-xl">
-                <Users className="text-purple-600 mb-4" size={48} />
-                <p className="font-semibold">Training Hub</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 mt-4 text-center">
-              Secure access for members: HR dashboards, equity benchmarks, leadership training, and advisory sessions.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Services with Data Layers */}
-      <section>
-        <h2 className="text-3xl font-bold mb-6 text-center">Data-Driven Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="shadow-md rounded-2xl overflow-hidden">
-            <CardContent className="p-6 bg-white">
-              <h3 className="font-semibold text-xl mb-2">HR Compliance</h3>
-              <p className="text-sm text-gray-600">
-                California map overlay with lawsuit activity zones to predict compliance risks.
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="shadow-md rounded-2xl overflow-hidden">
-            <CardContent className="p-6 bg-white">
-              <h3 className="font-semibold text-xl mb-2">Talent Acquisition</h3>
-              <p className="text-sm text-gray-600">
-                Heatmap showing candidate availability and cultural fit across Bay Area hotspots.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+        <span className="icon-pill">
+          <Icon size={24} />
+        </span>
+      </div>
     </div>
   );
 }
 
-// Main App component to render the mockup
-export default function App() {
-  return <SpartaHRMockup />;
+function DealCard({ deal }) {
+  return (
+    <div className="deal-card">
+      <div className="deal-card__top">
+        <h4 className="deal-card__title">{deal.company}</h4>
+        <Badge>{deal.value}</Badge>
+      </div>
+      <p className="deal-card__owner">Owner: {deal.owner}</p>
+      <div className="deal-card__status">
+        <Activity size={16} />
+        <span>{deal.status}</span>
+      </div>
+    </div>
+  );
 }
 
+function ContactRow({ contact }) {
+  return (
+    <div className="contact-row">
+      <div>
+        <p className="deal-card__title" style={{ margin: 0 }}>{contact.name}</p>
+        <p className="contact-meta">
+          {contact.title} · {contact.company}
+        </p>
+        <div className="tag-row">
+          {contact.tags.map((tag) => (
+            <Badge key={tag}>{tag}</Badge>
+          ))}
+        </div>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+        <Badge tone="success">Score {contact.score}</Badge>
+        <Badge tone="muted">{contact.segment}</Badge>
+      </div>
+    </div>
+  );
+}
+
+function ActivityItem({ activity }) {
+  const iconMap = {
+    Call: PhoneCall,
+    Email: Mail,
+    Demo: CalendarClock,
+    Task: CheckCircle2,
+  };
+
+  const Icon = iconMap[activity.type] || Activity;
+
+  return (
+    <div className="activity-row">
+      <div className="activity-row__left">
+        <span className="activity-icon">
+          <Icon size={18} />
+        </span>
+        <div>
+          <p className="deal-card__title" style={{ margin: 0 }}>{activity.subject}</p>
+          <p className="contact-meta" style={{ marginBottom: 0 }}>{activity.owner}</p>
+        </div>
+      </div>
+      <p className="contact-meta" style={{ margin: 0 }}>{activity.time}</p>
+    </div>
+  );
+}
+
+function TaskItem({ task }) {
+  const tone = task.status === "Blocked" ? "warning" : "success";
+  return (
+    <div className="task-row">
+      <div>
+        <p className="deal-card__title" style={{ margin: 0 }}>{task.label}</p>
+        <p className="contact-meta" style={{ margin: 0 }}>{task.due}</p>
+      </div>
+      <Badge tone={tone}>{task.status}</Badge>
+    </div>
+  );
+}
+
+function RevenueSparkline() {
+  return (
+    <div className="sparkline">
+      {revenue.map((point) => (
+        <div key={point.month}>
+          <div className="sparkline__bar-wrap">
+            <div className="sparkline__bar" style={{ height: `${point.value / 7}%` }} />
+          </div>
+          <p className="sparkline__label">{point.month}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="app-shell">
+      <div className="hero">
+        <div className="hero__grid">
+          <div>
+            <p className="hero__eyebrow">Growth CRM</p>
+            <h1 className="hero__title">Atlas CRM Command Center</h1>
+            <p className="hero__subtitle">
+              Centralize your revenue team workflows: pipeline health, high-intent contacts, and deal velocity insights in one place.
+            </p>
+            <div className="hero__actions">
+              <Button>Create deal</Button>
+              <Button variant="ghost">Schedule sync</Button>
+            </div>
+          </div>
+          <div className="hero__meta">
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Users size={18} />
+              <span>Team: Enterprise Sales</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Building2 size={18} />
+              <span>ARR coverage: 3.2x</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Star size={18} />
+              <span>CSAT: 4.8/5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main className="main">
+        <div className="stats-grid">
+          {stats.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
+        </div>
+
+        <div className="section-grid">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
+                <div>
+                  <p className="section-meta">Pipeline</p>
+                  <h2 className="section-title">Deal stages</h2>
+                </div>
+                <Badge>Realtime</Badge>
+              </div>
+              <div className="pipeline-grid">
+                {pipelineStages.map((stage) => (
+                  <div key={stage.name} className="pipeline-column">
+                    <div className="pipeline-column__head">
+                      <p className="deal-card__title" style={{ margin: 0 }}>{stage.name}</p>
+                      <Badge tone="muted">{stage.deals.length}</Badge>
+                    </div>
+                    {stage.deals.map((deal) => (
+                      <DealCard key={deal.company} deal={deal} />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
+                <div>
+                  <p className="section-meta">Signal Feed</p>
+                  <h2 className="section-title">Latest activities</h2>
+                </div>
+                <Button variant="subtle">View log</Button>
+              </div>
+              <div className="list-divider">
+                {activities.map((activity) => (
+                  <ActivityItem key={activity.subject} activity={activity} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="section-grid">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
+                <div>
+                  <p className="section-meta">Book of Business</p>
+                  <h2 className="section-title">Priority contacts</h2>
+                </div>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Button variant="subtle">Add contact</Button>
+                  <Button variant="ghost">Import CSV</Button>
+                </div>
+              </div>
+              <div className="list-divider">
+                {contacts.map((contact) => (
+                  <ContactRow key={contact.name} contact={contact} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
+                <div>
+                  <p className="section-meta">Tasks</p>
+                  <h2 className="section-title">RevOps queue</h2>
+                </div>
+                <Badge tone="success">SLA: 4h</Badge>
+              </div>
+              <div className="list-divider">
+                {tasks.map((task) => (
+                  <TaskItem key={task.label} task={task} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="section-grid">
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
+                <div>
+                  <p className="section-meta">Forecast</p>
+                  <h2 className="section-title">ARR trend</h2>
+                </div>
+                <Badge>Next 6 months</Badge>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: "20px" }}>
+                <RevenueSparkline />
+                <div style={{ display: "grid", gap: "10px", alignContent: "start" }}>
+                  <div className="story-item">
+                    <span className="story-item__icon green">
+                      <ArrowUpRight size={16} />
+                    </span>
+                    <span>Expansion deals outpacing churn by 4.2x</span>
+                  </div>
+                  <div className="story-item">
+                    <span className="story-item__icon indigo">
+                      <Clock3 size={16} />
+                    </span>
+                    <span>Average cycle reduced to 24 days</span>
+                  </div>
+                  <div className="story-item">
+                    <span className="story-item__icon purple">
+                      <Target size={16} />
+                    </span>
+                    <span>Northwind and Zenith flagged as high-intent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card__content">
+              <div className="section-header">
+                <div>
+                  <p className="section-meta">Customer story</p>
+                  <h2 className="section-title">Cobalt Fintech</h2>
+                </div>
+                <Badge tone="success">Renewal</Badge>
+              </div>
+              <div className="story-grid">
+                <div className="story-item">
+                  <span className="story-item__icon green">
+                    <CheckCircle2 size={16} />
+                  </span>
+                  <span>Onboarding phase complete</span>
+                </div>
+                <div className="story-item">
+                  <span className="story-item__icon indigo">
+                    <Mail size={16} />
+                  </span>
+                  <span>Weekly health summary shared</span>
+                </div>
+                <div className="story-item">
+                  <span className="story-item__icon purple">
+                    <CalendarClock size={16} />
+                  </span>
+                  <span>QBR scheduled for July 12</span>
+                </div>
+                <div className="story-item">
+                  <span className="story-item__icon amber">
+                    <DollarSign size={16} />
+                  </span>
+                  <span>Expansion: $220k multi-year add-on in review</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

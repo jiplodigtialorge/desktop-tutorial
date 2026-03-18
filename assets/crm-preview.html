@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atlas CRM Command Center</title>
+    <link rel="stylesheet" href="crm.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+  </head>
+  <body>
+    <div id="root" class="app-shell" aria-label="Atlas CRM demo"></div>
+    <script>
+      const state = {
+        stats: [
+          { label: "Active Deals", value: "32", delta: "+8 this month", trend: "up" },
+          { label: "Quarter Pipeline", value: "$1.42M", delta: "12% MoM", trend: "up" },
+          { label: "Win Rate", value: "38%", delta: "-3% vs last quarter", trend: "down" },
+          { label: "Avg. Close Time", value: "24 days", delta: "2 days faster", trend: "up" },
+        ],
+        pipelineStages: [
+          {
+            name: "Prospecting",
+            deals: [
+              { company: "Northwind Logistics", owner: "Alex Kim", value: "$28,400", status: "Discovery call booked" },
+              { company: "Zenith Labs", owner: "Priya Patel", value: "$19,900", status: "Awaiting brief" },
+            ],
+          },
+          {
+            name: "Qualified",
+            deals: [
+              { company: "Apex Security", owner: "Jamie Lee", value: "$46,300", status: "Proposal sent" },
+              { company: "Greenstone Solar", owner: "Maria Ruiz", value: "$35,100", status: "Compliance review" },
+            ],
+          },
+          {
+            name: "Negotiation",
+            deals: [
+              { company: "Helix Health", owner: "Alex Kim", value: "$81,750", status: "Legal redlines" },
+              { company: "Brightline Retail", owner: "Priya Patel", value: "$64,200", status: "Discount request" },
+            ],
+          },
+          {
+            name: "Closed Won",
+            deals: [
+              { company: "Cobalt Fintech", owner: "Jamie Lee", value: "$120,000", status: "Live onboarding" },
+              { company: "Vertex Analytics", owner: "Maria Ruiz", value: "$98,500", status: "Kickoff scheduled" },
+            ],
+          },
+        ],
+        contacts: [
+          { name: "Danielle Rivers", title: "VP of Operations", company: "Cobalt Fintech", segment: "Enterprise", score: 92, tags: ["Champion", "Renewal"] },
+          { name: "Malik Thompson", title: "Head of Procurement", company: "Northwind Logistics", segment: "Mid-Market", score: 78, tags: ["Price sensitive"] },
+          { name: "Sofia Martin", title: "IT Director", company: "Zenith Labs", segment: "Mid-Market", score: 84, tags: ["Security review"] },
+          { name: "Kevin Wu", title: "Founder", company: "Brightline Retail", segment: "SMB", score: 74, tags: ["Fast close"] },
+        ],
+        activities: [
+          { type: "Call", subject: "Renewal strategy with Cobalt", owner: "Alex Kim", time: "Today, 2:30pm" },
+          { type: "Email", subject: "Proposal follow-up with Apex", owner: "Priya Patel", time: "Today, 11:00am" },
+          { type: "Demo", subject: "Security review for Zenith", owner: "Jamie Lee", time: "Tomorrow, 9:00am" },
+          { type: "Task", subject: "Send onboarding playbook", owner: "Maria Ruiz", time: "Tomorrow, 3:00pm" },
+        ],
+        tasks: [
+          { label: "Build bespoke ROI calculator for Helix", due: "Due today", status: "On track" },
+          { label: "Finalize MSA redlines with Vertex", due: "Due tomorrow", status: "Blocked" },
+          { label: "Prep QBR deck for Cobalt", due: "Due Friday", status: "On track" },
+        ],
+        revenue: [
+          { month: "Jan", value: 240 },
+          { month: "Feb", value: 310 },
+          { month: "Mar", value: 420 },
+          { month: "Apr", value: 380 },
+          { month: "May", value: 520 },
+          { month: "Jun", value: 610 },
+        ],
+      };
+
+      function badge(content, tone = "indigo") {
+        const toneClass = tone === "success" ? "badge--success" : tone === "warning" ? "badge--warning" : tone === "muted" ? "badge--muted" : "";
+        return `<span class="badge ${toneClass}">${content}</span>`;
+      }
+
+      const root = document.getElementById("root");
+
+      root.innerHTML = `
+        <div class="hero">
+          <div class="hero__grid">
+            <div>
+              <p class="hero__eyebrow">Growth CRM</p>
+              <h1 class="hero__title">Atlas CRM Command Center</h1>
+              <p class="hero__subtitle">Centralize your revenue team workflows: pipeline health, high-intent contacts, and deal velocity insights in one place.</p>
+              <div class="hero__actions">
+                <button class="btn btn--primary">Create deal</button>
+                <button class="btn btn--ghost">Schedule sync</button>
+              </div>
+            </div>
+            <div class="hero__meta">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span>👥</span>
+                <span>Team: Enterprise Sales</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span>🏢</span>
+                <span>ARR coverage: 3.2x</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span>⭐</span>
+                <span>CSAT: 4.8/5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <main class="main">
+          <div class="stats-grid">
+            ${state.stats
+              .map(
+                (stat) => `
+                <div class="card card--subtle">
+                  <div class="card__content" style="display:flex;justify-content:space-between;align-items:center;">
+                    <div>
+                      <p class="stat-card__title">${stat.label}</p>
+                      <div class="stat-card__value">
+                        <span>${stat.value}</span>
+                        <span class="stat-card__delta ${stat.trend === "up" ? "stat-card__delta--up" : "stat-card__delta--down"}">
+                          ${stat.trend === "up" ? "⬆" : "⬇"} ${stat.delta}
+                        </span>
+                      </div>
+                    </div>
+                    <span class="icon-pill">📊</span>
+                  </div>
+                </div>`
+              )
+              .join("")}
+          </div>
+
+          <div class="section-grid">
+            <div class="card">
+              <div class="card__content">
+                <div class="section-header">
+                  <div>
+                    <p class="section-meta">Pipeline</p>
+                    <h2 class="section-title">Deal stages</h2>
+                  </div>
+                  ${badge("Realtime")}
+                </div>
+                <div class="pipeline-grid">
+                  ${state.pipelineStages
+                    .map(
+                      (stage) => `
+                      <div class="pipeline-column">
+                        <div class="pipeline-column__head">
+                          <p class="deal-card__title" style="margin:0">${stage.name}</p>
+                          ${badge(stage.deals.length, "muted")}
+                        </div>
+                        ${stage.deals
+                          .map(
+                            (deal) => `
+                            <div class="deal-card">
+                              <div class="deal-card__top">
+                                <h4 class="deal-card__title">${deal.company}</h4>
+                                ${badge(deal.value)}
+                              </div>
+                              <p class="deal-card__owner">Owner: ${deal.owner}</p>
+                              <div class="deal-card__status">💬 <span>${deal.status}</span></div>
+                            </div>`
+                          )
+                          .join("")}
+                      </div>`
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__content">
+                <div class="section-header">
+                  <div>
+                    <p class="section-meta">Signal Feed</p>
+                    <h2 class="section-title">Latest activities</h2>
+                  </div>
+                  <button class="btn btn--subtle">View log</button>
+                </div>
+                <div class="list-divider">
+                  ${state.activities
+                    .map(
+                      (activity) => `
+                      <div class="activity-row">
+                        <div class="activity-row__left">
+                          <span class="activity-icon">🔔</span>
+                          <div>
+                            <p class="deal-card__title" style="margin:0">${activity.subject}</p>
+                            <p class="contact-meta" style="margin-bottom:0">${activity.owner}</p>
+                          </div>
+                        </div>
+                        <p class="contact-meta" style="margin:0">${activity.time}</p>
+                      </div>`
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-grid">
+            <div class="card">
+              <div class="card__content">
+                <div class="section-header">
+                  <div>
+                    <p class="section-meta">Book of Business</p>
+                    <h2 class="section-title">Priority contacts</h2>
+                  </div>
+                  <div style="display:flex;gap:10px;">
+                    <button class="btn btn--subtle">Add contact</button>
+                    <button class="btn btn--ghost">Import CSV</button>
+                  </div>
+                </div>
+                <div class="list-divider">
+                  ${state.contacts
+                    .map(
+                      (contact) => `
+                      <div class="contact-row">
+                        <div>
+                          <p class="deal-card__title" style="margin:0">${contact.name}</p>
+                          <p class="contact-meta">${contact.title} · ${contact.company}</p>
+                          <div class="tag-row">
+                            ${contact.tags.map((tag) => badge(tag)).join("")}
+                          </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                          ${badge(`Score ${contact.score}`, "success")}
+                          ${badge(contact.segment, "muted")}
+                        </div>
+                      </div>`
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__content">
+                <div class="section-header">
+                  <div>
+                    <p class="section-meta">Tasks</p>
+                    <h2 class="section-title">RevOps queue</h2>
+                  </div>
+                  ${badge("SLA: 4h", "success")}
+                </div>
+                <div class="list-divider">
+                  ${state.tasks
+                    .map(
+                      (task) => `
+                      <div class="task-row">
+                        <div>
+                          <p class="deal-card__title" style="margin:0">${task.label}</p>
+                          <p class="contact-meta" style="margin:0">${task.due}</p>
+                        </div>
+                        ${badge(task.status, task.status === "Blocked" ? "warning" : "success")}
+                      </div>`
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-grid">
+            <div class="card">
+              <div class="card__content">
+                <div class="section-header">
+                  <div>
+                    <p class="section-meta">Forecast</p>
+                    <h2 class="section-title">ARR trend</h2>
+                  </div>
+                  ${badge("Next 6 months")}
+                </div>
+                <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;">
+                  <div class="sparkline">
+                    ${state.revenue
+                      .map(
+                        (point) => `
+                        <div>
+                          <div class="sparkline__bar-wrap">
+                            <div class="sparkline__bar" style="height:${point.value / 7}%"></div>
+                          </div>
+                          <p class="sparkline__label">${point.month}</p>
+                        </div>`
+                      )
+                      .join("")}
+                  </div>
+                  <div style="display:grid;gap:10px;align-content:start;">
+                    <div class="story-item">
+                      <span class="story-item__icon green">⬆</span>
+                      <span>Expansion deals outpacing churn by 4.2x</span>
+                    </div>
+                    <div class="story-item">
+                      <span class="story-item__icon indigo">⏱</span>
+                      <span>Average cycle reduced to 24 days</span>
+                    </div>
+                    <div class="story-item">
+                      <span class="story-item__icon purple">🎯</span>
+                      <span>Northwind and Zenith flagged as high-intent</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__content">
+                <div class="section-header">
+                  <div>
+                    <p class="section-meta">Customer story</p>
+                    <h2 class="section-title">Cobalt Fintech</h2>
+                  </div>
+                  ${badge("Renewal", "success")}
+                </div>
+                <div class="story-grid">
+                  <div class="story-item">
+                    <span class="story-item__icon green">✔</span>
+                    <span>Onboarding phase complete</span>
+                  </div>
+                  <div class="story-item">
+                    <span class="story-item__icon indigo">✉</span>
+                    <span>Weekly health summary shared</span>
+                  </div>
+                  <div class="story-item">
+                    <span class="story-item__icon purple">📅</span>
+                    <span>QBR scheduled for July 12</span>
+                  </div>
+                  <div class="story-item">
+                    <span class="story-item__icon amber">💰</span>
+                    <span>Expansion: $220k multi-year add-on in review</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      `;
+    </script>
+  </body>
+</html>
