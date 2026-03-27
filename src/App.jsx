@@ -346,28 +346,28 @@ export default function App() {
       <div className="hero">
         <div className="hero__grid">
           <div>
-            <p className="hero__eyebrow">Growth CRM</p>
-            <h1 className="hero__title">Atlas CRM Command Center</h1>
+            <p className="hero__eyebrow">Luxury Brand CRM</p>
+            <h1 className="hero__title">Aurelia House Collection Dashboard</h1>
             <p className="hero__subtitle">
-              Centralize your revenue team workflows: pipeline health, high-intent contacts, and deal velocity insights in one place.
+              Bring a white, gold, and rich brown luxury feel into your Webflow experience with a polished dashboard aesthetic built for premium collections and concierge sales.
             </p>
             <div className="hero__actions">
-              <Button>Create deal</Button>
-              <Button variant="ghost">Schedule sync</Button>
+              <Button>Launch collection</Button>
+              <Button variant="ghost">Book brand review</Button>
             </div>
           </div>
           <div className="hero__meta">
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Users size={18} />
-              <span>Team: Enterprise Sales</span>
+              <span>Studio: Private Collection</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Building2 size={18} />
-              <span>ARR coverage: 3.2x</span>
+              <span>Signature finish: White · Gold · Brown</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Star size={18} />
-              <span>CSAT: 4.8/5</span>
+              <span>Client experience: 4.8/5 concierge</span>
             </div>
           </div>
         </div>
