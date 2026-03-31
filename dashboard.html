@@ -50,6 +50,7 @@
       --pad-lg: 70px;
 
       --font: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --section-image: url("https://www.dropbox.com/scl/fi/osezsgf2vgxxhwvqpayjf/artisanal-mesquite-smoking-wood-luxury-catalog-11.png?rlkey=5huj3fn1obfem5lzglgl44lwc&st=mqtryhiv&raw=1");
     }
 
     *{ box-sizing:border-box; }
@@ -138,13 +139,64 @@
     .btn-primary:hover{ background: var(--primary-2); }
 
     .card{
-      background: var(--surface);
+      background: rgba(255,255,255,.94);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-soft);
       padding: 26px;
+      backdrop-filter: blur(8px);
     }
     .card.tight{ padding: 20px; border-radius: var(--radius-md); }
+
+    .section-visual{
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      border-radius: 26px;
+      border: 1px solid rgba(15, 23, 42, .12);
+      box-shadow: var(--shadow-soft);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(15,23,42,.28)),
+        var(--section-image) center/cover no-repeat;
+      isolation: isolate;
+    }
+    .section-visual::before{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(47,91,255,.18), rgba(255,255,255,.08) 45%, rgba(15,23,42,.18));
+      z-index: 0;
+    }
+    .section-visual__content{
+      position: absolute;
+      inset: auto 20px 20px 20px;
+      z-index: 1;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(255,255,255,.55);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 30px rgba(2,6,23,.16);
+    }
+    .section-visual__eyebrow{
+      margin: 0 0 6px;
+      font-size: .8rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 800;
+    }
+    .section-visual__title{
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+    .section-visual__text{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
 
     .pill{
       display:inline-flex; align-items:center; gap:10px;
@@ -339,6 +391,13 @@
         </div>
 
         <div class="hero-split">
+          <div class="section-visual" aria-label="Farm to Scale visual style">
+            <div class="section-visual__content">
+              <p class="section-visual__eyebrow">Signature Visual</p>
+              <h3 class="section-visual__title">Use this artisanal wood image style across the site.</h3>
+              <p class="section-visual__text">The page now repeats this same visual direction in every major section for a consistent luxury catalog look.</p>
+            </div>
+          </div>
           <div>
             <p class="kicker" style="margin-top:18px;">Trusted by revenue teams improving retention and expansion</p>
             <div class="logo-row" aria-label="Client logos">
@@ -430,6 +489,13 @@
             Executive lens: revenue quality improves when renewals and expansion are engineered, not improvised.
           </p>
         </div>
+        <div class="section-visual" aria-label="Revenue leak visual reference">
+          <div class="section-visual__content">
+            <p class="section-visual__eyebrow">Problem Visual</p>
+            <h3 class="section-visual__title">Revenue leaks hide behind polished surfaces.</h3>
+            <p class="section-visual__text">Using the same image treatment here keeps the message and the visual identity aligned.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -451,7 +517,7 @@
           It is built from more than 20 years of operating experience across enterprise and high-growth SaaS environments.
         </p>
 
-        <div class="grid grid-3" style="margin-top:18px;">
+      <div class="grid grid-3" style="margin-top:18px;">
           <div class="card tight">
             <h3>The Handoff Leak</h3>
             <p class="muted">Sales promises fail to transfer to Customer Success execution, creating immediate post-sale chaos.</p>
@@ -492,6 +558,14 @@
           <a class="btn btn-primary" href="#contact">Take a Revenue Leakage Assessment</a>
           <a class="btn" href="#contact">Schedule Farm to Scale Strategy Call</a>
         </div>
+
+        <div class="section-visual" aria-label="Farm to Scale methodology visual" style="margin-top:18px; min-height:320px;">
+          <div class="section-visual__content">
+            <p class="section-visual__eyebrow">Method Visual</p>
+            <h3 class="section-visual__title">One visual language for diagnosis, design, implementation, and scale.</h3>
+            <p class="section-visual__text">This section now uses the same featured image style instead of mixing in unrelated graphics.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -504,6 +578,14 @@
       <p class="muted" style="max-width: 78ch;">
         Choose the right level of support—from leadership alignment workshops to full OS implementation.
       </p>
+
+      <div class="section-visual" aria-label="Services visual reference" style="margin-top:18px; min-height:280px;">
+        <div class="section-visual__content">
+          <p class="section-visual__eyebrow">Services Visual</p>
+          <h3 class="section-visual__title">Every offer now shares the same luxury catalog image style.</h3>
+          <p class="section-visual__text">Executive workshops, projects, and fractional support all point back to the same core visual asset.</p>
+        </div>
+      </div>
 
       <div class="grid grid-3" style="margin-top:18px;">
         <article class="card">
@@ -553,6 +635,14 @@
     <div class="container">
       <div class="kicker">Reviews</div>
       <h2>From Stalled Growth to Systematic Expansion</h2>
+
+      <div class="section-visual" aria-label="Reviews visual reference" style="margin-top:18px; min-height:280px;">
+        <div class="section-visual__content">
+          <p class="section-visual__eyebrow">Reviews Visual</p>
+          <h3 class="section-visual__title">Social proof now sits beside the same branded image treatment.</h3>
+          <p class="section-visual__text">This keeps testimonials visually consistent with the rest of the experience.</p>
+        </div>
+      </div>
 
       <div class="grid grid-2" style="margin-top:18px;">
         <div class="card">
@@ -613,6 +703,14 @@
         Add your Insights feed here (CMS, blog, or articles). Keep posts short, analytical, and metric-driven to support AEO extraction.
       </p>
 
+      <div class="section-visual" aria-label="Insights visual reference" style="margin-top:18px; min-height:280px;">
+        <div class="section-visual__content">
+          <p class="section-visual__eyebrow">Insights Visual</p>
+          <h3 class="section-visual__title">Insight cards inherit the same hero image style.</h3>
+          <p class="section-visual__text">The content area now feels like part of the same brand system instead of a separate template.</p>
+        </div>
+      </div>
+
       <div class="grid grid-3" style="margin-top:18px;">
         <article class="card">
           <h3>Revenue leaks that don’t show up in churn reports</h3>
@@ -638,6 +736,14 @@
     <div class="container">
       <div class="kicker">Frequently Answered Questions</div>
       <h2>Anything missing? Ask us.</h2>
+
+      <div class="section-visual" aria-label="FAQ visual reference" style="margin-top:18px; min-height:260px;">
+        <div class="section-visual__content">
+          <p class="section-visual__eyebrow">FAQ Visual</p>
+          <h3 class="section-visual__title">Support content now matches the same visual standard.</h3>
+          <p class="section-visual__text">Even utility sections keep the single approved image style you requested.</p>
+        </div>
+      </div>
 
       <div class="grid" style="margin-top:18px;">
         <details>
@@ -692,7 +798,16 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="grid" style="gap:18px;">
+          <div class="section-visual" aria-label="Contact visual reference" style="min-height:260px;">
+            <div class="section-visual__content">
+              <p class="section-visual__eyebrow">Contact Visual</p>
+              <h3 class="section-visual__title">The approved image style also carries through to the conversion area.</h3>
+              <p class="section-visual__text">This keeps the final CTA aligned with the rest of the website.</p>
+            </div>
+          </div>
+
+          <div class="card">
           <h3>Send a message</h3>
           <p class="muted">We’ll reply with next steps and the fastest path to diagnosing your revenue leaks.</p>
 
@@ -731,6 +846,7 @@
               By submitting, you agree to the Privacy Policy and Terms.
             </p>
           </form>
+          </div>
         </div>
       </div>
     </div>
